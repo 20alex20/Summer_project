@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Исходные файлы\system">
+      <UniqueIdentifier>{08f0d5f3-544f-4872-b1a3-e4acae19c486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\classes">
+      <UniqueIdentifier>{72c0f723-63b5-4d00-8ba3-c35792a26a01}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="functions.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="to_ctype.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="error.c">
+      <Filter>Исходные файлы\system</Filter>
+    </ClCompile>
+    <ClCompile Include="garbage_collector.c">
+      <Filter>Исходные файлы\system</Filter>
+    </ClCompile>
+    <ClCompile Include="hidden.c">
+      <Filter>Исходные файлы\system</Filter>
+    </ClCompile>
+    <ClCompile Include="start_program.c">
+      <Filter>Исходные файлы\system</Filter>
+    </ClCompile>
+    <ClCompile Include="array.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="bool.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="class_name.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="func.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="int.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="range.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="string.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="type_iterator.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="dt_delta.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+    <ClCompile Include="date_time.c">
+      <Filter>Исходные файлы\classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="defines.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="all.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="global_variables.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
