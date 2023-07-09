@@ -1,6 +1,7 @@
 #include "all.h"
 #define __FILE array_c
 char* array_c = "array.c";
+#define __class_name String
 
 
 object* cr__array(size_t len, ...) {
@@ -21,7 +22,6 @@ object* cr__array(size_t len, ...) {
 
 
 
-#define __class_name String
 #define clear (4, iterator, element, string, flag)
 object* __to_string__array(object* __func, object* self, ...) {
 	start_func(NULL, arg(self), 1);
@@ -46,7 +46,7 @@ object* __to_string__array(object* __func, object* self, ...) {
 #define clear (0)
 object* __tabi__array(object* __func, object* self, object* num, ...) {
 	start_func(NULL, arg(num), 2, arg(self), 1);
-	size_t n = __module_index2(num, self->len); // получение реального индекса
+	size_t n = __module_index_passive_active(num, self->len); // получение реального индекса
 	returnf(*((object**)self->start + n));
 }
 
@@ -54,7 +54,7 @@ object* __tabi__array(object* __func, object* self, object* num, ...) {
 #define clear (0)
 object* __pubi__array(object* __func, object* self, object* num, object* sth, ...) {
 	start_func(NULL, arg(num), 2, arg(self), 1, arg(sth), 3);
-	object** n = (object**)self->start + __module_index2(num, self->len);
+	object** n = (object**)self->start + __module_index_passive_active(num, self->len);
 	__dop(*n);
 	*n = __enlon(sth);
 	returnf(sth);
@@ -64,7 +64,7 @@ object* __pubi__array(object* __func, object* self, object* num, object* sth, ..
 #define clear (0)
 object* __slice__array(object* __func, object* self, object* start, object* stop, object* step, ...) {
 	start_func(NULL, arg(self), 1, arg(start), 2, arg(step), 4, arg(stop), 3);
-	long long len = self->len, start_index = __module_index(start, len), end_index = __module_index(stop, len), e = to_c_size_t(step);
+	long long len = self->len, start_index = __module_index_passive(start, len), end_index = __module_index_passive(stop, len), e = to_c_size_t(step);
 	bool flag = step->flag;
 	if (start_index == end_index || (start_index > end_index) ^ flag)
 		return cr__array(0);
@@ -72,7 +72,7 @@ object* __slice__array(object* __func, object* self, object* start, object* stop
 	len = abs(end_index - start_index);
 	len = len / e + (len % e != 0);
 	object** newarray = (object**)malloc(len * lenptr);
-	e *= 1 - 2 * self->flag;  // !!!
+	e *= 1 - 2 * flag;
 	while ((start_index < end_index) ^ flag && start_index != end_index && start_index >= 0) {
 		*newarray++ = __enlon(arr[start_index]);
 		start_index += e;

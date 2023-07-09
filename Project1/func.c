@@ -19,7 +19,7 @@ object* cr__func(object* (*f) (), bool flag, ushort len, ...) {
 }
 
 
-object* __change__func(object** __func, object* self, object* flag, ...) {
+object* __change__func(object** __func, object* self, object* flag, ...) {  // правила вызова
 	__enlon(self);
 	object** nextarg = &__func + 3;
 	if (__pos < 2)
@@ -34,16 +34,16 @@ object* __change__func(object** __func, object* self, object* flag, ...) {
 	}
 	if (__pos + __nam == 0)
 		return cr__noth;
-	__flag = TRUE;
+	__return_args_names = TRUE;
 	uint* names = func(self, __pos, __nam);
-	__flag = FALSE;
+	__return_args_names = FALSE;
 	if (!names)
 		__fast_error(__ANOTHER_ERROR, "Have not got any arguments to change");
 	object** sth = self->start;
 	ushort len = self->n;
 	self->start = __finarg2(len, names, sth, nextarg);
 	for (ushort i = 0; i < len; i++)
-		__dop(sth[i]);  // !!!
+		__dop(sth[i]);
 	free(sth);
 	__dop(self);
 	return cr__noth;

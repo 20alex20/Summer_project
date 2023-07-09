@@ -41,12 +41,13 @@ object* __enlon(object* sth) {  // enlarge one nop
 }
 
 
-object* __dop_and_do(object* self, object* sth) {
+object* __dop_and_do(object* self, object* sth) {  // sth != self
 	__dop(self);
 	return sth;
 }
 
-object* __dop_and_do_2(object* self, object* self2,  object* sth) {
+
+object* __dop_and_do_2(object* self, object* self2, object* sth) {
 	__dtp(self, self2);
 	return sth;
 }
@@ -54,7 +55,8 @@ object* __dop_and_do_2(object* self, object* self2,  object* sth) {
 
 object* __dop(object* sth) {  // dell one pointer
 	if (sth != NULL && sth->name >= 3) {
-		sth->nop -= 1;
+		if (sth->nop != 0)
+			sth->nop -= 1;
 		if (sth->nop == 0)
 			__destroy(sth);
 	}

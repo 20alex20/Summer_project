@@ -100,7 +100,7 @@ object* __length(object* __func, object* self, ...) {
 
 object* __type_of(object* __func, object* self, ...) {
 	start_func(NULL, arg(self), 1);
-	return __fast_dop(__classes[self->name]);
+	return __self_dop(__classes[self->name]);
 }
 
 
@@ -108,7 +108,7 @@ object* __is_instance(object* __func, object* self, object* name, ...) {
 	start_func(NULL, arg(name), 2, arg(self), 1);
 	if (name->name != CLASS_NAME)
 		__fast_error(__TYPE_ARG_ERROR, name->name);
-	return __fast_dop(cr__bool(self->name == name->nop));
+	return __self_dop(cr__bool(self->name == name->nop));
 }
 
 

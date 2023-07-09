@@ -65,8 +65,8 @@ object* Noth, * Bool, * ClassName, * Array, * Date_time, * Dt_delta, * Func, * I
 object* range, * print, * length, * copy, * type_of, * is_instance, * to_another_type, * end_program, * return_self, * input, * Int, * String, * Bool, * Noth, * ClassName, * Func, * Array, * TypeIterator, * Range, * is_leap, * add_0, * date_time, * date_time, * Date_time, * dt_delta, * dt_delta, * Dt_delta;
 
 
-bool __only_usascii, __flag; uint __line, __pos, __nam; char* __file;
-object* __boofer_func, * __boofer_self, * __boofer_return, * cr__noth, * __classes[14], * __variables;
+bool __only_usascii, __return_args_names; uint __line, __pos, __nam; const char* __file;
+object* __boofer_func, * __boofer_self, * __boofer_return, * cr__noth, * __classes[14];
 extern uint* __to_another_type_arr[];
 extern uint var(today)[], var(reverse)[], var(to_range)[], var(tabi)[], var(day)[], var(add)[], var(current)[], var(seconds)[], var(to_bool)[], var(rod)[], var(arr_days)[], var(multiply)[], var(minute)[], var(to_int)[], var(to_type_iterator)[], var(less)[], var(hour)[], var(pubi)[], var(to_array)[], var(to_string)[], var(year)[], var(divide)[], var(month)[], var(equal)[], var(more)[], var(to_utf8)[], var(step)[], var(to_windows1251)[], var(bin)[], var(slice)[], var(now)[], var(subtract)[], var(next)[], var(second)[], var(numsign)[], var(my)[], var(stop)[], var(module)[], var(change)[], var(to_func)[];
 
@@ -80,7 +80,7 @@ typedef enum {
 } class_name;
 
 enum named_args {
-	__after_arg, __arr_arg, __before_arg, __between_arg, __day_arg, __days_arg, __hour_arg, __hours_arg, __minute_arg, __minutes_arg, __month_arg, __n_arg, __name_arg, __num_arg, __second_arg, __seconds_arg, __self2_arg, __self_arg, __start_arg, __start_str_arg, __step_arg, __sth_arg, __stop_arg, __str_arg, __year_arg
+	arg(after), arg(arr), arg(before), arg(between), arg(day), arg(days), arg(hour), arg(hours), arg(minute), arg(minutes), arg(month), arg(n), arg(name), arg(num), arg(second), arg(seconds), arg(self2), arg(self), arg(start), arg(start_str), arg(step), arg(sth), arg(stop), arg(str), arg(year)
 };
 
 

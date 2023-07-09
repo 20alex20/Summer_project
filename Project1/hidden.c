@@ -56,8 +56,8 @@ void __to_one_type(object** self, object** self2) {
 	}
 }
 
-object* __create_distribution(object* self, object* self2, uint* class_names, object* (**functions) (object * self, object * self2), object* (*cur) (object* self, object* self2)) {
-	size_t index = __universal_recursion(class_names, 1, self2->name);
+object* __create_distribution(object* self, object* self2, uint* class_names, size_t len, object* (**functions) (object * self, object * self2), object* (*cur) (object* self, object* self2)) {
+	size_t index = __recursion_index(class_names, len / 4, self2->name);
 	if (index == NULL)
 		return cur(self, __enlon(func(to_another_type, 2, 0, self2, __classes[self->name])));
 	return functions[(index - (size_t)class_names) / 4](self, self2);
@@ -78,11 +78,6 @@ void __open_access(object* self, object* class, class_name it) {
 }
 
 
-object* __free_arr(object* ret, object** sth) {
-	free(sth);
-	return ret;
-}
-
 
 object* (*__pf(object* f, ushort pos, ushort nam))() {
 	__pos = pos;
@@ -92,7 +87,7 @@ object* (*__pf(object* f, ushort pos, ushort nam))() {
 }
 
 
-ull* __recursia_from2(ull* start, ushort len, uint num) {
+ull* __recursion_second_value(ull* start, ushort len, uint num) {
 	ushort l1 = len / 2, l2 = len - l1;
 	uint n = *((uint*)(start + l1));
 	if (n == num)
@@ -100,9 +95,9 @@ ull* __recursia_from2(ull* start, ushort len, uint num) {
 	if (len == 1)
 		return NULL;
 	if (num < n)
-		return __recursia_from2(start, l1, num);
+		return __recursion_second_value(start, l1, num);
 	if (num > n)
-		return __recursia_from2(start + l1, l2, num);
+		return __recursion_second_value(start + l1, l2, num);
 }
 
 
@@ -112,7 +107,7 @@ object* (*__pm(object* self, uint* name, ushort pos, ushort nam))() {
 	__boofer_self = self;
 	if (self->name == CLASS_NAME)
 		__fast_error(__ANOTHER_ERROR, "You can't apply the method to the class_name");
-	uint* index = __recursia_from2(name + 1, *name, self->name);
+	uint* index = __recursion_second_value(name + 1, *name, self->name);
 	if (index == NULL)
 		__fast_error(__NAME_ARG_ERROR_2, self->name);
 	uint i = *(index + 1);
@@ -121,7 +116,7 @@ object* (*__pm(object* self, uint* name, ushort pos, ushort nam))() {
 }
 
 
-uint* __universal_recursion(uint* start, ushort len, uint num) {
+uint* __recursion_index(uint* start, ushort len, uint num) {
 	ushort l1 = len / 2, l2 = len - l1;
 	uint n = *(start + l1);
 	if (n == num)
@@ -129,33 +124,23 @@ uint* __universal_recursion(uint* start, ushort len, uint num) {
 	if (len == 1)
 		return NULL;
 	if (num < n)
-		return __universal_recursion(start, l1, num);
+		return __recursion_index(start, l1, num);
 	if (num > n)
-		return __universal_recursion(start + l1, l2, num);
+		return __recursion_index(start + l1, l2, num);
 }
-/*
-object** __from(object* self, uint name) {
-	if (self->name < 11)
-		__fast_error(__TYPE_ARG_ERROR, self->nop);
-	size_t start = self->len;
-	size_t index = __recursia_sth_from(start, self->flag, name);
-	if (index == NULL)
-		__fast_error(__NAME_ARG_ERROR, name);
-	return (object**)self->start + (index - start) / 4;
-}
-*/
 
 
-object** __from2(object* self, uint* name) {
+object** __from(object* self, uint* name) {
 	uint* index;
 	if (self->name == CLASS_NAME) {
-		index = __recursia_from2(name + 1, *name, self->nop);
+		index = __recursion_second_value(name + 1, *name, self->nop);
 		if (index == NULL)
 			__fast_error(__NAME_ARG_ERROR_2, self->nop);
 		return (object**)__classes[self->name]->start + (*(index + 1) >> 16) - 1;
 	}
 	else {
-		index = __recursia_from2(name + 1, *name, self->name);
+		__enlon(self);
+		index = __recursion_second_value(name + 1, *name, self->name);
 		if (index == NULL)
 			__fast_error(__NAME_ARG_ERROR_2, self->name);
 		uint i = *(index + 1);
@@ -164,7 +149,7 @@ object** __from2(object* self, uint* name) {
 			sth = (object**)__classes[self->name]->start + (i >> 16) - 1;
 		else
 			sth = (object**)self->start + i - 1;
-		__(self);
+		__dop(self);
 		return sth;
 	}
 }
@@ -179,10 +164,11 @@ char __lenbit(uchar n) {
 
 
 size_t __strlen(char* s) {
-	register size_t i = 0;
+	size_t i = 0;
 	while (s[i]) i++;
 	return i;
 }
+
 
 size_t __strlen8(uchar* s) {  // string length with utf-8
 	register size_t i = 0, j = 0;
@@ -202,7 +188,8 @@ size_t __strlen8(uchar* s) {  // string length with utf-8
 	return i;
 }
 
-size_t __module_index2(object* num, size_t len) {
+
+size_t __module_index_passive_active(object* num, size_t len) {
 	size_t n = to_c_size_t(num);
 	if (num->flag) {
 		if (len < n)
@@ -216,13 +203,15 @@ size_t __module_index2(object* num, size_t len) {
 	}
 }
 
-size_t __module_index(object* num, size_t len) {
+
+size_t __module_index_passive(object* num, size_t len) {
 	size_t n = to_c_size_t(num);
 	if (num->flag)
 		return n < len ? len - n : 0;
 	else
 		return n < len ? n : len - 1;
 }
+
 
 long long __index_in_utf8(uchar* s, long long n, bool flag) {
 	long long i = 0, j = 0;
@@ -249,6 +238,7 @@ long long __index_in_utf8(uchar* s, long long n, bool flag) {
 	return i + j;
 }
 
+
 object* __fm(object* sth, bool flag, bool f, object* sth1) {
 	if (sth->name != INT)
 		__fast_error(__TYPE_ARG_ERROR, sth->name);
@@ -261,19 +251,7 @@ void __finarg(ushort len, uint* names, ushort have_arr, object** oldargs, object
 	if (__nam > len)
 		__error(__file, __line, __TOO_MANY_NAMED_ARGS_ERROR, __nam, len);
 	bool* flags = calloc(len, 1);
-	uint* names_named = NULL, i = 0;
-	object** named = NULL, ** newargs_named = NULL;
-	if (__nam > 0) {
-		named = malloc(__nam * lenptr);
-		newargs_named = newargs + __pos;
-		names_named = malloc(__nam * 4);
-		while (i < __nam) {
-			names_named[i] = newargs_named[i * 2];
-			named[i] = newargs_named[i * 2 + 1];
-			i++;
-		}
-		i = 0;
-	}
+	uint i = 0;
 	if (have_arr != 0) {
 		have_arr -= 1;
 		size_t m = min(__pos, have_arr);
@@ -312,19 +290,22 @@ void __finarg(ushort len, uint* names, ushort have_arr, object** oldargs, object
 			i++;
 		}
 	}
-	i = 0;
-	while (i < __nam) {
-		if (named[i]) {
-			uint* index_null = __recursia_from2(names, len, names_named[i]);
-			if (index_null == NULL)
-				__error(__file, __line, __NAME_ARG_ERROR, names_named[i]);
-			uint index = *(index_null + 1) - 1;
-			if (flags[index])
-				__error(__file, __line, __MANY_VALUES_ARG_ERROR, index);
-			newargs[index] = __enlon_func(named[i]);
-			flags[index] = TRUE;
+	if (__nam > 0) {
+		object** newargs_named = newargs + __pos;
+		i = 0;
+		while (i < __nam) {
+			if (newargs_named[i * 2 + 1]) {
+				uint* index_null = __recursion_second_value(names, len, newargs_named[i * 2]);
+				if (index_null == NULL)
+					__error(__file, __line, __NAME_ARG_ERROR, newargs_named[i * 2]);
+				uint index = *(index_null + 1) - 1;
+				if (flags[index])
+					__error(__file, __line, __MANY_VALUES_ARG_ERROR, index);
+				newargs[index] = __enlon_func(newargs_named[i * 2 + 1]);
+				flags[index] = TRUE;
+			}
+			i++;
 		}
-		i++;
 	}
 	i = 0;
 	while (i < len) {
@@ -336,11 +317,8 @@ void __finarg(ushort len, uint* names, ushort have_arr, object** oldargs, object
 		i++;
 	}
 	free(flags);
-	if (__nam > 0) {
-		free(named);
-		free(names_named);
-	}
 }
+
 
 object** __finarg2(ushort len, uint* names, object** oldargs, object** newargs) {
 	if (__nam > len)
@@ -357,7 +335,7 @@ object** __finarg2(ushort len, uint* names, object** oldargs, object** newargs) 
 	}
 	i = 0;
 	while (i < __nam) {
-		uint* index_null = __recursia_from2(names, len, named[i * 2]);
+		uint* index_null = __recursion_second_value(names, len, named[i * 2]);
 		if (index_null == NULL)
 			__error(__file, __line, __NAME_ARG_ERROR, named[i * 2]);
 		uint index = *(index_null + 1) - 1;
@@ -375,25 +353,6 @@ object** __finarg2(ushort len, uint* names, object** oldargs, object** newargs) 
 	}
 	free(flags);
 	return answer;
-}
-
-
-object* __getarg(bool flag, ...) {
-	static object** newargs, ** oldargs;
-	object** nextarg = (object**)&flag + 1;
-	if (flag) {
-		oldargs = nextarg[0];
-		newargs = nextarg[1];
-		return NULL;
-	}
-	ushort i = *((ushort*)nextarg);
-	object* arg = newargs[i];
-	if (!arg) {
-		arg = oldargs[i];
-		if (!arg)
-			__error(__file, __line, __NO_ARG_ERROR, i);
-	}
-	return __enlon_func(arg);
 }
 
 
@@ -420,6 +379,7 @@ char* __decimal_addition(char* first, char* second, char notfr) {
 		free(first);
 	return third;
 }
+
 
 char __decnot_to_binnot(bool flag_start, ...) {  // decimal notation to binary notation
 	static bool flag_mode;
@@ -487,6 +447,7 @@ ushort* __recursia_w1251(uint* start, size_t len, ushort num) {
 	if (num > n)
 		return __recursia_w1251(start + l1 , l2, num);
 }
+
 
 ushort __windows_1251[126] = { 160, 160, 164, 164, 166, 166, 167, 167, 169, 169, 171, 171, 172, 172, 173, 173, 174, 174, 176, 176, 177, 177, 181, 181, 182, 182, 183, 183, 187, 187, 1025, 168, 1026, 128, 1027, 129, 1028, 170, 1029, 189, 1030, 178, 1031, 175, 1032, 163, 1033, 138, 1034, 140, 1035, 142, 1036, 141, 1038, 161, 1039, 143, 1105, 184, 1106, 144, 1107, 131, 1108, 186, 1109, 190, 1110, 179, 1111, 191, 1112, 188, 1113, 154, 1114, 156, 1115, 158, 1116, 157, 1118, 162, 1119, 159, 1168, 165, 1169, 180, 8211, 150, 8212, 151, 8216, 145, 8217, 146, 8218, 130, 8220, 147, 8221, 148, 8222, 132, 8224, 134, 8225, 135, 8226, 149, 8230, 133, 8240, 137, 8249, 139, 8250, 155, 8364, 136, 8470, 185, 8482, 153 };
 

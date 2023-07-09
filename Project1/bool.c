@@ -16,49 +16,49 @@ char* __false_str = "FALSE";
 
 object* __to_string__bool(object* __func, object* self, ...) {
 	start_func(NULL, arg(self), 1);
-	return __fast_dop(cr__string(self->flag ? __true_str : __false_str, US_ASCII));
+	return __self_dop(cr__string(self->flag ? __true_str : __false_str, US_ASCII));
 }
 
 
 object* __to_int__bool(object* __func, object* self, ...) {
 	start_func(NULL, arg(self), 1);
-	return __fast_dop(cr__int(FALSE, self->flag));
+	return __self_dop(cr__int(FALSE, self->flag));
 }
 
 
 
 object* __equal_bool__bool(object* self, object* self2) {
-	return __fast_dop_2(cr__bool(self->flag == self2->flag));
+	return __self_dop_2(cr__bool(self->flag == self2->flag));
 }
 
 object* __equal__bool(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { BOOL };
 	static object* (*functions[]) (object * self, object * self2) = { __equal_bool__bool };
-	return __create_distribution(self, self2, class_names, functions, __equal_bool__bool);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __equal_bool__bool);
 }
 
 
 object* __more_bool__bool(object* self, object* self2) {
-	return __fast_dop_2(cr__bool(self->flag > self2->flag));
+	return __self_dop_2(cr__bool(self->flag > self2->flag));
 }
 
 object* __more__bool(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { BOOL };
 	static object* (*functions[]) (object * self, object * self2) = { __more_bool__bool };
-	return __create_distribution(self, self2, class_names, functions, __more_bool__bool);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __more_bool__bool);
 }
 
 
 
 object* __less_bool__bool(object* self, object* self2) {
-	return __fast_dop_2(cr__bool(self->flag < self2->flag));
+	return __self_dop_2(cr__bool(self->flag < self2->flag));
 }
 
 object* __less__bool(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { BOOL };
 	static object* (*functions[]) (object * self, object * self2) = { __less_bool__bool };
-	return __create_distribution(self, self2, class_names, functions, __less_bool__bool);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __less_bool__bool);
 }

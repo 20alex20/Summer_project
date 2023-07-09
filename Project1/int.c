@@ -92,7 +92,7 @@ object* __to_string__int(object* __func, object* self, ...) {
 
 object* __to_bool__int(object* __func, object* self, ...) {
 	start_func(NULL, arg(self), 1);
-	return __fast_dop(cr__bool(self->len != 1 || *((uchar*)self->start) != 0));
+	return __self_dop(cr__bool(self->len != 1 || *((uchar*)self->start) != 0));
 }
 
 
@@ -134,7 +134,7 @@ object* __add__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __add_int__int };
-	return __create_distribution(self, self2, class_names, functions, __add_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __add_int__int);
 }
 
 
@@ -147,7 +147,7 @@ object* __subtract_int__int(object* self, object* self2) {
 		return obj;
 	}
 	if (meth(self, equal, 1, 0, self2)->flag)
-		return __fast_dop_2(cr__int(FALSE, 0));
+		return __self_dop_2(cr__int(FALSE, 0));
 	object* obj = (object*)malloc(sizeof(object));
 	obj->name = INT;
 	obj->nop = 0;
@@ -187,7 +187,7 @@ object* __subtract__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __subtract_int__int };
-	return __create_distribution(self, self2, class_names, functions, __subtract_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __subtract_int__int);
 }
 
 
@@ -239,7 +239,7 @@ object* __multiply__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __multiply_int__int };
-	return __create_distribution(self, self2, class_names, functions, __multiply_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __multiply_int__int);
 }
 
 
@@ -323,7 +323,7 @@ object* __divide__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __divide_int__int };
-	return __create_distribution(self, self2, class_names, functions, __divide_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __divide_int__int);
 }
 
 
@@ -382,7 +382,7 @@ object* __rod__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __rod_int__int };
-	return __create_distribution(self, self2, class_names, functions, __rod_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __rod_int__int);
 }
 
 
@@ -408,7 +408,7 @@ object* __equal__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __equal_int__int };
-	return __create_distribution(self, self2, class_names, functions, __equal_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __equal_int__int);
 }
 
 
@@ -416,7 +416,7 @@ object* __less_int__int(object* self, object* self2);
 
 object* __more_int__int(object* self, object* self2) {
 	if (self->flag != self2->flag)
-		return __fast_dop_2(cr__bool(self2->flag));
+		return __self_dop_2(cr__bool(self2->flag));
 	if (self->flag == 1 && self2->flag == 1) {
 		self->flag = 0; self2->flag = 0;
 		object* ans = __less_int__int(__enlon(self), __enlon(self2));
@@ -425,13 +425,13 @@ object* __more_int__int(object* self, object* self2) {
 		return ans;
 	}
 	if (self->len != self2->len)
-		return __fast_dop_2(cr__bool(self->len > self2->len));
+		return __self_dop_2(cr__bool(self->len > self2->len));
 	size_t i = self->len;
 	uchar* num1 = self->start, * num2 = self2->start;
 	while (i > 0) {
 		i--;
 		if (num1[i] != num2[i])
-			return __fast_dop_2(cr__bool((num1[i] > num2[i]) ^ self->flag));
+			return __self_dop_2(cr__bool((num1[i] > num2[i]) ^ self->flag));
 	}
 	__dtp(self, self2);
 	return cr__bool(FALSE);
@@ -441,13 +441,13 @@ object* __more__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __more_int__int };
-	return __create_distribution(self, self2, class_names, functions, __more_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __more_int__int);
 }
 
 
 object* __less_int__int(object* self, object* self2) {
 	if (self->flag != self2->flag)
-		return __fast_dop_2(cr__bool(self->flag));
+		return __self_dop_2(cr__bool(self->flag));
 	if (self->flag == 1 && self2->flag == 1) {
 		self->flag = 0; self2->flag = 0;
 		object* ans = __more_int__int(__enlon(self), __enlon(self2));
@@ -462,7 +462,7 @@ object* __less_int__int(object* self, object* self2) {
 	while (i > 0) {
 		i--;
 		if (num1[i] != num2[i])
-			return __fast_dop_2(cr__bool((num1[i] < num2[i]) ^ self->flag));
+			return __self_dop_2(cr__bool((num1[i] < num2[i]) ^ self->flag));
 	}
 	__dtp(self, self2);
 	return cr__bool(FALSE);
@@ -472,7 +472,7 @@ object* __less__int(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { INT };
 	static object* (*functions[]) (object * self, object * self2) = { __less_int__int };
-	return __create_distribution(self, self2, class_names, functions, __less_int__int);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __less_int__int);
 }
 
 

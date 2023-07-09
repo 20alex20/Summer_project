@@ -17,7 +17,7 @@ void __error(char* name, uint line, errors nomer, intptr_t sth, ...) {
 		printf("No named variable numbered %u", sth);
 		break;
 	case __NAME_ARG_ERROR_2:
-		printf("This name is not implemented ", __classes[sth]->len);
+		printf("This name is not implemented for %s", __classes[sth]->len);
 		break;
 	case __INDEX_ERROR:
 		printf("Index %d of variable of length %u out of the range", sth, *(&sth + 1));
@@ -42,7 +42,7 @@ void __error(char* name, uint line, errors nomer, intptr_t sth, ...) {
 		break;
 	case __W1251_ERROR:
 		system("chcp 65001");
-		printf("Unable to use Windows 1251 encoding due to the presence of utf-8 characters in the string: %s", (char*)sth);
+		printf("Unable to use Windows 1251 encoding due to the presence of utf-8 characters in the string: %s", sth);
 		break;
 	case __ANOTHER_ERROR:
 		printf(sth);

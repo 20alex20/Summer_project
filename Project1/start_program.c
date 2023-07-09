@@ -10,7 +10,7 @@ object __const_noth = { NOTH, NULL, NULL, NULL, NULL, NULL };
 void start_program() {
 	SetConsoleOutputCP(65001);
 	SetConsoleCP(1251);
-	__flag = FALSE;
+	__return_args_names = FALSE;
 	cr__noth = &__const_noth;
 	return_self = __enlon(cr__func(__return_self, FALSE, 1, NULL));
 

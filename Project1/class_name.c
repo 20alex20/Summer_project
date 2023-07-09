@@ -23,12 +23,12 @@ object* cr__class_name(uint name, char* string, ushort len1, ushort len, ...) {
 
 
 object* __equal_class_name__class_name(object* self, object* self2) {
-	return __fast_dop_2(cr__bool(self->nop == self2->nop));
+	return __self_dop_2(cr__bool(self->nop == self2->nop));
 }
 
 object* __equal__class_name(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { CLASS_NAME };
 	static object* (*functions[]) (object * self, object * self2) = { __equal_class_name__class_name };
-	return __create_distribution(self, self2, class_names, functions, __equal_class_name__class_name);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __equal_class_name__class_name);
 }

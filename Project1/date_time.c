@@ -1,6 +1,8 @@
 #include "all.h"
 #define __FILE date_time_c
 char* date_time_c = "date_time.c";
+#define __class DATE_TIME
+#define __class_name Date_time
 
 
 object* __pr__date_time(object* __func) {
@@ -9,8 +11,6 @@ object* __pr__date_time(object* __func) {
 }
 
 
-#define __class DATE_TIME
-#define __class_name Date_time
 #define clear (1, cur_days)
 object* __date_time (object* __func, object* self, object* year, object* month, object* day, object* hour, object* minute, object* second, ...) { start_func(NULL, arg(day), 4, arg(hour), 5, arg(minute), 6, arg(month), 3, arg(second), 7, arg(self), 1, arg(year), 2); object* cur_days = NULL;
     ass(minute, meth(minute, add, 1, 0, meth(second, divide, 1, 0, cr__int(FALSE, 60))));
@@ -39,30 +39,24 @@ object* __date_time (object* __func, object* self, object* year, object* month, 
 }
 
 
-#define __class DATE_TIME
-#define __class_name Date_time
 #define clear (0)
 object* __today__date_time (object* __func, object* self) { start_func(NULL, arg(self), 1); start_method(); 
     returnf(func(date_time, 0, 3, narg(year, cr__int(FALSE, 1970)),  narg(month, cr__int(FALSE, 1)),  narg(day, cr__int(FALSE, 1))));
 }
 
-#define __class DATE_TIME
-#define __class_name Date_time
+
 #define clear (0)
 object* __now__date_time (object* __func, object* self) { start_func(NULL, arg(self), 1); start_method(); 
     returnf(func(date_time, 0, 6, narg(year, cr__int(FALSE, 1970)),  narg(month, cr__int(FALSE, 1)),  narg(day, cr__int(FALSE, 1)),  narg(hour, cr__int(FALSE, 0)),  narg(minute, cr__int(FALSE, 0)),  narg(second, cr__int(FALSE, 0))));
 }
 
-#define __class DATE_TIME
-#define __class_name Date_time
+
 #define clear (0)
 object* __to_string__date_time (object* __func, object* self) { start_func(NULL, arg(self), 1); start_method(); 
     returnf(meth(meth(meth(meth(meth(meth(meth(meth(meth(meth(func(add_0, 1, 0, frs(day)), add, 1, 0, cr__string(".", UTF_8)), add, 1, 0, func(add_0, 1, 0, frs(month))), add, 1, 0, cr__string(".", UTF_8)), add, 1, 0, meth(frs(year), to_string, 0, 0)), add, 1, 0, cr__string(" ", UTF_8)), add, 1, 0, func(add_0, 1, 0, frs(hour))), add, 1, 0, cr__string(":", UTF_8)), add, 1, 0, func(add_0, 1, 0, frs(minute))), add, 1, 0, cr__string(":", UTF_8)), add, 1, 0, func(add_0, 1, 0, frs(second))));
 }
 
 
-#define __class DATE_TIME
-#define __class_name Date_time
 #define __class_2 DT_DELTA
 #define __class_name_2 Dt_delta
 #define clear (0)
@@ -74,5 +68,5 @@ object* __add__date_time (object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { DT_DELTA };
 	static object* (*functions[]) (object * self, object * self2) = { __add_dt_delta__date_time };
-	return __create_distribution(self, self2, class_names, functions, NULL);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, NULL);
 }

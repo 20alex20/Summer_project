@@ -8,7 +8,7 @@ object* cr__string(ptrdiff_t sth, ...) {
 	self->name = STRING;
 	self->nop = 0;
 	ptrdiff_t* nextarg = &sth;
-	if (nextarg[0] == NULL) {
+	if (nextarg[0] == NULL) { // для случая, когда строка сгенерирована
 		self->flag = TRUE;
 		self->start = nextarg[1];
 		self->n = nextarg[2];
@@ -50,13 +50,13 @@ object* cr__string(ptrdiff_t sth, ...) {
 
 object* __to_int__string(object* __func, object* self, ...) {
 	start_func(NULL, arg(self), 1);
-	return __fast_dop(cr__int(TRUE, self->start));
+	return __self_dop(cr__int(TRUE, self->start));
 }
 
 
 object* __to_bool__string(object* __func, object* self, ...) {
 	start_func(NULL, arg(self), 1);
-	return __fast_dop(cr__bool(self->len > 0));
+	return __self_dop(cr__bool(self->len > 0));
 }
 
 
@@ -96,8 +96,7 @@ object* __tabi__string(object* __func, object* self, object* num, ...) {
 	start_func(NULL, arg(num), 2, arg(self), 1);
 	if (num->name != INT)
 		__fast_error(__TYPE_ARG_ERROR, num->name);
-	__fl();
-	size_t len = self->len, n = __module_index2(num, len);
+	size_t len = self->len, n = __module_index_passive_active(num, len);
 	uchar* string = self->start, * symbol;
 	if (self->n == UTF_8) {
 		n = __index_in_utf8(string, n, FALSE);
@@ -130,19 +129,19 @@ object* __tabi__string(object* __func, object* self, object* num, ...) {
 #define clear (0)
 object* __slice__string(object* __func, object* self, object* start, object* stop, object* step, ...) {
 	start_func(NULL, arg(self), 1, arg(start), 2, arg(step), 4, arg(stop), 3);
-	long long len = self->len, a = __module_index(start, len), o = __module_index(stop, len), e = to_c_size_t(step), len8;
+	long long len = self->len, start_index = __module_index_passive(start, len), end_index = __module_index_passive(stop, len), e = to_c_size_t(step), len8;
 	bool flag = step->flag;
 	uchar mode, encoding = US_ASCII;
-	if (a == o || (a > o) ^ flag)
+	if (start_index == end_index || (start_index > end_index) ^ flag)
 		return cr__string("", US_ASCII);
-	len8 = abs(o - a);
+	len8 = abs(end_index - start_index);
 	len8 = len8 / e + (len8 % e != 0);
 	uchar* string = self->start, * newstring, * newstring_start;
 	if (self->n == UTF_8) {
 		newstring = (uchar*)malloc(len8 + min(3 * len8, __strlen(string) - len) + 1);
 		newstring_start = newstring;
 		len = 1 - 2 * flag;
-		string += __index_in_utf8(string, a, FALSE);
+		string += __index_in_utf8(string, start_index, FALSE);
 		while (TRUE) {
 			mode = *string;
 			if (mode < 128)
@@ -157,8 +156,8 @@ object* __slice__string(object* __func, object* self, object* start, object* sto
 				encoding = UTF_8;
 			for (uchar h = 0; h < mode; h++)
 				*newstring++ = string[h];
-			a += e * len;
-			if ((a >= o) ^ flag || a == o || a < 0)
+			start_index += e * len;
+			if ((start_index >= end_index) ^ flag || start_index == end_index || start_index < 0)
 				break;
 			string += __index_in_utf8(string, e, flag);
 		}
@@ -171,17 +170,16 @@ object* __slice__string(object* __func, object* self, object* start, object* sto
 		newstring = (uchar*)malloc(len8 + 1);
 		newstring_start = newstring;
 		e *= 1 - 2 * flag;
-		while ((a < o) ^ flag && a != o && a >= 0) {
-			*newstring++ = mode = string[a];
+		while ((start_index < end_index) ^ flag && start_index != end_index && start_index >= 0) {
+			*newstring++ = mode = string[start_index];
 			if (mode >= 128)
 				encoding = WINDOWS_1251;
-			a += e;
+			start_index += e;
 		}
 		*newstring = END;
 		returnf(cr__string(NULL, newstring_start, encoding, newstring - newstring_start));
 	}
 }
-
 
 
 object* __add_string__string(object* self, object* self2) {
@@ -195,85 +193,83 @@ object* __add_string__string(object* self, object* self2) {
 	while (*s2)
 		s3[i++] = *s2++;
 	s3[i] = END;
-	__dtp(self, self2);
-	return cr__string(NULL, s3, max(self->n, self2->n), len);
+	return __self_dop_2(cr__string(NULL, s3, max(self->n, self2->n), len));
 }
 
 object* __add__string(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { STRING };
 	static object* (*functions[]) (object * self, object * self2) = { __add_string__string };
-	return __create_distribution(self, self2, class_names, functions, __add_string__string);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __add_string__string);
 }
-
 
 
 object* __equal_string__string(object* self, object* self2) {
 	__to_one_type(&self, &self2);
 	if (self->len != self2->len)
-		return __fast_dop_2(cr__bool(FALSE));
+		return __self_dop_2(cr__bool(FALSE));
 	uchar* str1 = self->start, * str2 = self2->start;
 	while (*str1 && *str2) {
 		uchar s1 = *str1++, s2 = *str2++;
 		if (s1 != s2)
-			return __fast_dop_2(cr__bool(FALSE));
+			return __self_dop_2(cr__bool(FALSE));
 	}
 	if (!*str1 && !*str2)
-		return __fast_dop_2(cr__bool(TRUE));
-	return __fast_dop_2(cr__bool(FALSE));
+		return __self_dop_2(cr__bool(TRUE));
+	return __self_dop_2(cr__bool(FALSE));
 }
 
 object* __equal__string(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { STRING };
 	static object* (*functions[]) (object * self, object * self2) = { __equal_string__string };
-	return __create_distribution(self, self2, class_names, functions, __equal_string__string);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __equal_string__string);
 }
 
 
 object* __more_string__string(object* self, object* self2) {
 	__to_one_type(&self, &self2);
 	if (self->len != self2->len)
-		return __fast_dop_2(cr__bool(self->len > self2->len));
+		return __self_dop_2(cr__bool(self->len > self2->len));
 	uchar* str1 = self->start, * str2 = self2->start;
 	while (*str1 && *str2) {
 		uchar s1 = *str1++, s2 = *str2++;
 		if (s1 != s2)
-			return __fast_dop_2(cr__bool(s1 > s2));
+			return __self_dop_2(cr__bool(s1 > s2));
 	}
 	if (!*str1 && !*str2)
-		return __fast_dop_2(cr__bool(FALSE));
-	return __fast_dop_2(cr__bool(*str1 != END));
+		return __self_dop_2(cr__bool(FALSE));
+	return __self_dop_2(cr__bool(*str1 != END));
 }
 
 object* __more__string(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { STRING };
 	static object* (*functions[]) (object * self, object * self2) = { __more_string__string };
-	return __create_distribution(self, self2, class_names, functions, __more_string__string);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __more_string__string);
 }
 
 
 object* __less_string__string(object* self, object* self2) {
 	__to_one_type(&self, &self2);
 	if (self->len != self2->len)
-		return __fast_dop_2(cr__bool(self->len < self2->len));
+		return __self_dop_2(cr__bool(self->len < self2->len));
 	uchar* str1 = self->start, * str2 = self2->start;
 	while (*str1 && *str2) {
 		uchar s1 = *str1++, s2 = *str2++;
 		if (s1 != s2)
-			return __fast_dop_2(cr__bool(s1 < s2));
+			return __self_dop_2(cr__bool(s1 < s2));
 	}
 	if (!*str1 && !*str2)
-		return __fast_dop_2(cr__bool(FALSE));
-	return __fast_dop_2(cr__bool(*str2 != END));
+		return __self_dop_2(cr__bool(FALSE));
+	return __self_dop_2(cr__bool(*str2 != END));
 }
 
 object* __less__string(object* __func, object* self, object* self2, ...) {
 	start_func(NULL, arg(self), 1, arg(self2), 2);
 	static uint class_names[] = { STRING };
 	static object* (*functions[]) (object * self, object * self2) = { __less_string__string };
-	return __create_distribution(self, self2, class_names, functions, __less_string__string);
+	return __create_distribution(self, self2, class_names, sizeof(class_names), functions, __less_string__string);
 }
 
 
